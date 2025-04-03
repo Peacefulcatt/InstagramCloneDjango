@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+</head>
+<body>
+    <h1>Notifications</h1>
+    <a href="{% url 'home' %}">Home</a> | 
+    <a href="{% url 'feed' %}">Feed</a> | 
+    <a href="{% url 'profile' user.username %}">My Profile</a> | 
+    <a href="{% url 'logout' %}">Logout</a>
+
+    <ul>
+        {% for notification in notifications %}
+            <li>
+                {% if notification.notification_type == 'like' %}
+                    <strong>{{ notification.sender.username }}</strong> liked your post.
+                {% elif notification.notification_type == 'comment' %}
+                    <strong>{{ notification.sender.username }}</strong> commented on your post.
+                {% elif notification.notification_type == 'follow' %}
+                    <strong>{{ notification.sender.username }}</strong> started following you.
+                {% endif %}
+                <small>{{ notification.created_at }}</small>
+            </li>
+        {% empty %}
+            <p>No notifications yet.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
