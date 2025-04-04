@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Explore{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Explore</h2>
+    <div class="row g-4">
+        {% for post in posts %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <a href="{% url 'post_detail' post.id %}">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'profile' post.user.username %}" class="text-decoration-none">
+                                {{ post.user.username }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ post.caption }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

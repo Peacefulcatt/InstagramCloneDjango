@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Search</h2>
+    <form method="GET" action="{% url 'search' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search for users or posts..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    {% if query %}
+        <h4>Results for "{{ query }}":</h4>
+        <div class="mt-4">
+            <h5>Users</h5>
+            <ul class="list-group mb-4">
+                {% for user in users %}
+                    <li class="list-group-item">
+                        <a href="{% url 'profile' user.username %}" class="text-decoration-none">{{ user.username }}</a>
+                    </li>
+                {% empty %}
+                    <p>No users found.</p>
+                {% endfor %}
+            </ul>
+
+            <h5>Posts</h5>
+            <div class="row g-4">
+                {% for post in posts %}
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <a href="{% url 'post_detail' post.id %}">
+                                <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'profile' post.user.username %}" class="text-decoration-none">
+                                        {{ post.user.username }}
+                                    </a>
+                                </h5>
+                                <p class="card-text">{{ post.caption }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No posts found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <h4>Suggested Posts:</h4>
+        <div class="row g-4 mt-4">
+            {% for post in suggested_posts %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <a href="{% url 'post_detail' post.id %}">
+                            <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'profile' post.user.username %}" class="text-decoration-none">
+                                    {{ post.user.username }}
+                                </a>
+                            </h5>
+                            <p class="card-text">{{ post.caption }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Stories{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Stories</h2>
+    <div class="row">
+        {% for story in active_stories %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ story.image.url }}" class="card-img-top" alt="Story Image">
+                    <div class="card-body text-center">
+                        <p class="card-text">{{ story.user.username }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No active stories.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

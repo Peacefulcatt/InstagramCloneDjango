@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Messages</h2>
+    <form method="POST" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" name="receiver" class="form-control" placeholder="Enter username" required>
+        </div>
+        <div class="mb-3">
+            <textarea name="content" class="form-control" placeholder="Enter your message" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+
+    <h4>Conversations</h4>
+    <ul class="list-group">
+        {% for message in conversations %}
+            <li class="list-group-item">
+                <strong>{{ message.sender.username }}</strong> to <strong>{{ message.receiver.username }}</strong>: {{ message.content }}
+                <small class="text-muted d-block">{{ message.created_at }}</small>
+            </li>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
