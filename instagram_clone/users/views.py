@@ -15,6 +15,7 @@ from django.db.models import Q
 import random
 from django.utils import timezone
 from .models import Story, Message  # Import the Message model
+from .models import SavedPost  # Import the SavedPost model
 
 
 @login_required
@@ -100,18 +101,8 @@ def like_post(request, post_id):
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     if not created:
         like.delete()  # Unlike if the user already liked the post
-        liked = False
-    else:
-        liked = True
-        # Create a notification for the post owner
-        if post.user != request.user:
-            Notification.objects.create(
-                sender=request.user,
-                receiver=post.user,
-                notification_type='like',
-                post=post
-            )
-    return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
+    # Redirect back to the referring page
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 @login_required
 def create_post(request):
@@ -204,10 +195,10 @@ def stories_view(request):
     return render(request, 'stories.html', {'active_stories': active_stories})
 
 @login_required
-
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    return render(request, 'post_detail.html', {'post': post})    
+    is_saved = post.saved_by.filter(user=request.user).exists()  # Check if the post is saved
+    return render(request, 'post_detail.html', {'post': post, 'is_saved': is_saved})
 
 def save_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
